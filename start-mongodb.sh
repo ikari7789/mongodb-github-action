@@ -63,7 +63,8 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   fi
   echo "::endgroup::"
 
-  echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+  # echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+  echo "::set-output name=mongodb-cid::$(cat ${CID_FILE})"
 
   exit 0
 fi
@@ -83,7 +84,8 @@ if [ $? -ne 0 ]; then
 fi
 echo "::endgroup::"
 
-echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+# echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+echo "::set-output name=mongodb-cid::$(cat ${CID_FILE})"
 
 echo "::group::Waiting for MongoDB to accept connections"
 sleep 1
