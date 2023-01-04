@@ -1,5 +1,13 @@
 #!/bin/sh
 
+kill_mongodb_container() {
+  docker container kill $(cat /tmp/mongodb.cid)
+  docker container rm --force $(cat /tmp/mongodb.cid)
+  rm -f /tmp/mongodb.cid
+}
+
+trap kill_mongodb_container SIGINT SIGQUIT SIGTERM INT TERM QUIT
+
 # Map input values from the GitHub Actions workflow to shell variables
 MONGODB_VERSION=$1
 MONGODB_REPLICA_SET=$2
@@ -37,7 +45,7 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   echo "  - credentials [$MONGODB_USERNAME:$MONGODB_PASSWORD]"
   echo ""
 
-  docker run --name mongodb --publish $MONGODB_PORT:27017 -e MONGO_INITDB_DATABASE=$MONGODB_DB -e MONGO_INITDB_ROOT_USERNAME=$MONGODB_USERNAME -e MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD --detach mongo:$MONGODB_VERSION
+  docker run --cidfile /tmp/mongodb.cid --publish $MONGODB_PORT:27017 -e MONGO_INITDB_DATABASE=$MONGODB_DB -e MONGO_INITDB_ROOT_USERNAME=$MONGODB_USERNAME -e MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD --detach mongo:$MONGODB_VERSION
 
   if [ $? -ne 0 ]; then
       echo "Error starting MongoDB Docker container"
@@ -55,7 +63,7 @@ echo "  - version [$MONGODB_VERSION]"
 echo "  - replica set [$MONGODB_REPLICA_SET]"
 echo ""
 
-docker run --name mongodb --publish $MONGODB_PORT:$MONGODB_PORT --detach mongo:$MONGODB_VERSION --replSet $MONGODB_REPLICA_SET --port $MONGODB_PORT
+docker run --cidfile /tmp/mongodb.cid --publish $MONGODB_PORT:$MONGODB_PORT --detach mongo:$MONGODB_VERSION --replSet $MONGODB_REPLICA_SET --port $MONGODB_PORT
 
 if [ $? -ne 0 ]; then
     echo "Error starting MongoDB Docker container"
@@ -68,7 +76,7 @@ echo "::group::Waiting for MongoDB to accept connections"
 sleep 1
 TIMER=0
 
-until docker exec --tty mongodb $MONGO_CLIENT --port $MONGODB_PORT --eval "db.serverStatus()" # &> /dev/null
+until docker exec --tty $(cat /tmp/mongodb.cid) $MONGODB_CONTAINER $MONGO_CLIENT --port $MONGODB_PORT --eval "db.serverStatus()" # &> /dev/null
 do
   sleep 1
   echo "."
@@ -84,7 +92,7 @@ echo "::endgroup::"
 
 echo "::group::Initiating replica set [$MONGODB_REPLICA_SET]"
 
-docker exec --tty mongodb $MONGO_CLIENT --port $MONGODB_PORT --eval "
+docker exec --tty $(cat /tmp/mongodb.cid) $MONGO_CLIENT --port $MONGODB_PORT --eval "
   rs.initiate({
     \"_id\": \"$MONGODB_REPLICA_SET\",
     \"members\": [ {
@@ -99,7 +107,7 @@ echo "::endgroup::"
 
 
 echo "::group::Checking replica set status [$MONGODB_REPLICA_SET]"
-docker exec --tty mongodb $MONGO_CLIENT --port $MONGODB_PORT --eval "
+docker exec --tty $(cat /tmp/mongodb.cid) $MONGO_CLIENT --port $MONGODB_PORT --eval "
   rs.status()
 "
 echo "::endgroup::"
