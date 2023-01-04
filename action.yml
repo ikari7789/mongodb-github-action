@@ -36,6 +36,11 @@ inputs:
     required: false
     default: ''
 
+  runner-name:
+    description: 'Name of the runner (default: none)'
+    required: false
+    default: ''
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -46,4 +51,4 @@ runs:
     - ${{ inputs.mongodb-db }}
     - ${{ inputs.mongodb-username }}
     - ${{ inputs.mongodb-password }}
-    - $(hostname)
+    - ${{ inputs.runner-name }}
