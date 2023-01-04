@@ -61,7 +61,7 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
       echo "Error starting MongoDB Docker container"
       exit 2
   fi
-  echo "mongodb-container=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
+  echo "cid=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
   echo "::endgroup::"
 
   return

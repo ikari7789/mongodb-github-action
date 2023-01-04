@@ -42,8 +42,8 @@ inputs:
     default: ''
 
 outputs:
-  mongodb-container:
-    description: 'Container name for the generated container'
+  cid:
+    description: 'Container ID for the generated container'
 
 runs:
   using: 'docker'
