@@ -44,6 +44,8 @@ inputs:
 outputs:
   mongodb-cid:
     description: 'Container ID for the generated container'
+  mongodb-container:
+    description: 'Container name for the generated container'
 
 runs:
   using: 'docker'
