@@ -61,8 +61,9 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
       echo "Error starting MongoDB Docker container"
       exit 2
   fi
-  echo "cid=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
   echo "::endgroup::"
+
+  echo "cid=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
 
   return
 fi
@@ -80,9 +81,9 @@ if [ $? -ne 0 ]; then
     echo "Error starting MongoDB Docker container"
     exit 2
 fi
-echo "mongodb-container=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
 echo "::endgroup::"
 
+echo "cid=$(cat /tmp/mongodb.cid)" >> $GITHUB_OUTPUT
 
 echo "::group::Waiting for MongoDB to accept connections"
 sleep 1
