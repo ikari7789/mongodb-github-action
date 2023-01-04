@@ -42,8 +42,8 @@ inputs:
     default: ''
 
 outputs:
-  cid:
-    description: 'Container ID for the generated container'
+  container-name:
+    description: 'Container name for the generated container'
 
 runs:
   using: 'docker'
