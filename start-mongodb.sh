@@ -64,7 +64,7 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   echo "::endgroup::"
 
   echo "container-name=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE))" >> $GITHUB_OUTPUT
-
+  echo "Github Output: $GITHUB_OUTPUT"
   return
 fi
 
