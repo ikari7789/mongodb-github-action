@@ -41,6 +41,10 @@ inputs:
     required: false
     default: ''
 
+outputs:
+  mongodb-container:
+    description: 'Container name for the generated container'
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
