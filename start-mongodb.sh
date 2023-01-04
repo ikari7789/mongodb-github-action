@@ -63,10 +63,9 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   fi
   echo "::endgroup::"
 
-  echo "container-name=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE))" >> $GITHUB_OUTPUT
-  echo "Github Output: $GITHUB_OUTPUT"
-  cat $GITHUB_OUTPUT
-  return
+  echo "mongodb-cid=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE))" >> $GITHUB_OUTPUT
+
+  exit 0
 fi
 
 
@@ -84,7 +83,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "::endgroup::"
 
-echo "container-name=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE))" >> $GITHUB_OUTPUT
+echo "mongodb-cid=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE))" >> $GITHUB_OUTPUT
 
 echo "::group::Waiting for MongoDB to accept connections"
 sleep 1
