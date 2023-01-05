@@ -58,6 +58,7 @@ start_container() {
   echo "  - port [$MONGODB_PORT]"
   echo "  - replica set [$MONGODB_REPLICA_SET]"
   echo "  - version [$MONGODB_VERSION]"
+  echo "  - cidfile [$CID_FILE]"
   echo ""
 
   cleanup_leftover_container
@@ -96,6 +97,8 @@ set_outputs() {
   echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
   echo " - container port [$CONTAINER_PORT]"
 
+  echo ""
+
   echo "::endgroup::"
 }
 
@@ -124,6 +127,8 @@ wait_for_connections() {
     fi
   done
 
+  echo ""
+
   echo "::endgroup::"
 }
 
@@ -142,6 +147,8 @@ initiate_replica_set() {
   
   echo "Success! Initiated replica set [$MONGODB_REPLICA_SET]"
 
+  echo ""
+
   echo "::endgroup::"
 }
 
@@ -151,6 +158,8 @@ check_replica_set_status() {
   docker exec --tty $(cat $CID_FILE) $MONGO_CLIENT --port $MONGODB_PORT --eval "
     rs.status()
   "
+
+  echo ""
 
   echo "::endgroup::"
 }
