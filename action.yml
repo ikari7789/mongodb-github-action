@@ -43,11 +43,13 @@ inputs:
 
 outputs:
   mongodb-container-id:
-    description: 'Container ID for the generated container'
+    description: 'ID for the generated container'
   mongodb-container-name:
-    description: 'Container name for the generated container'
+    description: 'Name for the generated container'
+  mongodb-container-ip-address:
+    description: 'IP address for the generated container'
   mongodb-container-port:
-    description: 'Container port for the generated container'
+    description: 'Port for the generated container'
 
 runs:
   using: 'docker'

@@ -1,5 +1,32 @@
 #!/bin/sh
 
+set_outputs() {
+  echo "::group::Instance information"
+
+  CONTAINER_ID=$(cat $CID_FILE)
+  CONTAINER_NAME=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)
+  CONTAINER_IP_ADDRESS=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(cat $CID_FILE))
+  CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))
+
+  echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
+  echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
+  echo " - container id [$CONTAINER_ID]"
+
+  echo "::set-output name=mongodb-container-name::$CONTAINER_NAME"
+  echo "mongodb-container-name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
+  echo " - container name [$CONTAINER_NAME]"
+
+  echo "::set-output name=mongodb-container-ip-address::$CONTAINER_IP_ADDRESS"
+  echo "mongodb-container-ip-address=$CONTAINER_IP_ADDRESS" >> $GITHUB_OUTPUT
+  echo " - container ip address [$CONTAINER_IP_ADDRESS]"
+
+  echo "::set-output name=mongodb-container-port::$CONTAINER_PORT"
+  echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
+  echo " - container port [$CONTAINER_PORT]"
+
+  echo "::endgroup::"
+}
+
 # Map input values from the GitHub Actions workflow to shell variables
 MONGODB_VERSION=$1
 MONGODB_REPLICA_SET=$2
@@ -51,25 +78,7 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   echo "::endgroup::"
 
 
-  echo "::group::Instance information"
-
-  CONTAINER_ID=$(cat $CID_FILE)
-  CONTAINER_NAME=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)
-  CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))
-
-  echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
-  echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
-  echo " - container id [$CONTAINER_ID]"
-
-  echo "::set-output name=mongodb-container-name::$CONTAINER_NAME"
-  echo "mongodb-container-name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
-  echo " - container name [$CONTAINER_NAME]"
-
-  echo "::set-output name=mongodb-container-port::$CONTAINER_PORT"
-  echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
-  echo " - container port [$CONTAINER_PORT]"
-
-  echo "::endgroup::"
+  set_outputs
 
 
   exit 0
@@ -91,25 +100,7 @@ fi
 echo "::endgroup::"
 
 
-echo "::group::Instance information"
-
-CONTAINER_ID=$(cat $CID_FILE)
-CONTAINER_NAME=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)
-CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))
-
-echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
-echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
-echo " - container id [$CONTAINER_ID]"
-
-echo "::set-output name=mongodb-container-name::$CONTAINER_NAME"
-echo "mongodb-container-name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
-echo " - container name [$CONTAINER_NAME]"
-
-echo "::set-output name=mongodb-container-port::$CONTAINER_PORT"
-echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
-echo " - container port [$CONTAINER_PORT]"
-
-echo "::endgroup::"
+set_outputs
 
 
 echo "::group::Waiting for MongoDB to accept connections"
