@@ -7,7 +7,7 @@ MONGODB_PORT=$3
 MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
-CID_FILE=/$GITHUB_WORKSPACE/mongodb-$GITHUB_RUN_ID.cid
+CID_FILE=$GITHUB_WORKSPACE/mongodb-$GITHUB_RUN_ID.cid
 
 ensure_required_values_provided() {
   if [ -z "$MONGODB_VERSION" ]; then
@@ -33,8 +33,9 @@ select_mongodb_client() {
 
 cleanup_leftover_container() {
   if [ -e $CID_FILE ]; then
-    docker container rm -f $CID_FILE || true
-    rm $CID_FILE
+    docker container kill $(cat $CID_FILE) > /dev/null 2>&1 || true
+    docker container rm -f $(cat $CID_FILE) > /dev/null 2>&1 || true
+    rm $CID_FILE > /dev/null 2>&1 || true
   fi
 }
 
