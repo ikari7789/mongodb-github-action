@@ -12,14 +12,14 @@ inputs:
     default: 'latest'
 
   mongodb-replica-set:
-    description: 'MongoDB replica set name (no replica set by default)'
+    description: 'MongoDB replica set name (default: none)'
     required: false
     default: ''
 
   mongodb-port:
-    description: 'MongoDB port to use (default: none)'
+    description: 'MongoDB port to use (default: 27017)'
     required: false
-    default: ''
+    default: 27017
 
   mongodb-db:
     description: 'MongoDB db to create (default: none)'
