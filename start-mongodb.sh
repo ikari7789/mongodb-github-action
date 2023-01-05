@@ -39,8 +39,7 @@ cleanup_leftover_container() {
 }
 
 prepare_cid_file() {
-  mktemp --help
-  CID_FILE=$GITHUB_WORKSPACE/$(basename $(mktemp))
+  CID_FILE=$(mktemp -p $GITHUB_WORKSPACE mongodb)
   cleanup_leftover_container
   echo "CID_FILE=${CID_FILE}" >> $GITHUB_ENV
 }
