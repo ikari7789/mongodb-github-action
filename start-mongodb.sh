@@ -7,7 +7,7 @@ MONGODB_PORT=$3
 MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
-CID_FILE=$GITHUB_WORKSPACE/mongodb-$GITHUB_RUN_ID.cid
+CID_FILE=/$GITHUB_WORKSPACE/mongodb-$GITHUB_RUN_ID.cid
 
 ensure_required_values_provided() {
   if [ -z "$MONGODB_VERSION" ]; then
