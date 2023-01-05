@@ -39,10 +39,10 @@ cleanup_leftover_container() {
 }
 
 prepare_cid_file() {
-  CID_FILE=$GITHUB_WORKSPACE/mongodb.$(md5sum <<EOF
+  HASH=`md5sum <<EOF
 $RANDOM
-EOF
-)
+EOF`
+  CID_FILE=$GITHUB_WORKSPACE/mongodb.$HASH
   cleanup_leftover_container
   echo "CID_FILE=${CID_FILE}" >> $GITHUB_ENV
 }
