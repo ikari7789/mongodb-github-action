@@ -78,7 +78,7 @@ set_outputs() {
   CONTAINER_ID=$(cat $CID_FILE)
   CONTAINER_NAME=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)
   CONTAINER_IP_ADDRESS=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(cat $CID_FILE))
-  CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))
+  CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "'$MONGODB_PORT'/tcp") 0).HostPort }}' $(cat $CID_FILE))
 
   echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
   echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
