@@ -31,6 +31,13 @@ select_mongodb_client() {
   echo "::endgroup::"
 }
 
+cleanup_leftover_container() {
+  if [ -e $CID_FILE ]; then
+    docker container rm -f $CID_FILE || true
+    rm $CID_FILE
+  fi
+}
+
 start_container() {
   DOCKER_SWITCHES="--publish $MONGODB_PORT"
   MONGO_SWITCHES="--port $MONGODB_PORT"
@@ -51,6 +58,8 @@ start_container() {
   echo "  - replica set [$MONGODB_REPLICA_SET]"
   echo "  - version [$MONGODB_VERSION]"
   echo ""
+
+  cleanup_leftover_container
 
   docker run --cidfile $CID_FILE $DOCKER_SWITCHES --detach mongo:$MONGODB_VERSION $MONGO_SWITCHES
 
