@@ -67,12 +67,15 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
 
   echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
   echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
+  echo " - container id [$CONTAINER_ID]"
 
   echo "::set-output name=mongodb-container-name::$CONTAINER_NAME"
   echo "mongodb-container-name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
+  echo " - container name [$CONTAINER_NAME]"
 
   echo "::set-output name=mongodb-container-port::$CONTAINER_PORT"
   echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
+  echo " - container port [$CONTAINER_PORT]"
 
   echo "::endgroup::"
 
@@ -104,12 +107,15 @@ CONTAINER_PORT=$(docker inspect --format='{{ (index (index .NetworkSettings.Port
 
 echo "::set-output name=mongodb-container-id::$CONTAINER_ID"
 echo "mongodb-container-id=$CONTAINER_ID" >> $GITHUB_OUTPUT
+echo " - container id [$CONTAINER_ID]"
 
 echo "::set-output name=mongodb-container-name::$CONTAINER_NAME"
 echo "mongodb-container-name=$CONTAINER_NAME" >> $GITHUB_OUTPUT
+echo " - container name [$CONTAINER_NAME]"
 
 echo "::set-output name=mongodb-container-port::$CONTAINER_PORT"
 echo "mongodb-container-port=$CONTAINER_PORT" >> $GITHUB_OUTPUT
+echo " - container port [$CONTAINER_PORT]"
 
 echo "::endgroup::"
 
