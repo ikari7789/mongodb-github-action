@@ -8,6 +8,8 @@ MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
 
+CID_FILE=$(mktemp -p $GITHUB_WORKSPACE mongodb.XXXXXX)
+
 ensure_required_values_provided() {
   if [ -z "$MONGODB_VERSION" ]; then
     echo ""
@@ -39,7 +41,6 @@ cleanup_leftover_container() {
 }
 
 prepare_cid_file() {
-  CID_FILE=$(mktemp -p $GITHUB_WORKSPACE mongodb.XXXXXX)
   cleanup_leftover_container
   echo "CID_FILE=${CID_FILE}" >> $GITHUB_ENV
 }
