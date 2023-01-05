@@ -17,9 +17,9 @@ inputs:
     default: ''
 
   mongodb-port:
-    description: 'MongoDB port to use (default 27017)'
+    description: 'MongoDB port to use (default: none)'
     required: false
-    default: 27017
+    default: ''
 
   mongodb-db:
     description: 'MongoDB db to create (default: none)'
