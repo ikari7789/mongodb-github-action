@@ -36,7 +36,7 @@ inputs:
     required: false
     default: ''
 
-  runner-name:
+  host-container-hostname:
     description: 'Name of the runner (default: none)'
     required: false
     default: ''
@@ -62,4 +62,4 @@ runs:
     - ${{ inputs.mongodb-db }}
     - ${{ inputs.mongodb-username }}
     - ${{ inputs.mongodb-password }}
-    - ${{ inputs.runner-name }}
+    - ${{ inputs.host-container-hostname }}
