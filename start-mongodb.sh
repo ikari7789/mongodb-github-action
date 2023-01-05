@@ -1,13 +1,5 @@
 #!/bin/sh
 
-kill_mongodb_container() {
-  docker container kill $(cat /tmp/mongodb.cid)
-  docker container rm --force $(cat /tmp/mongodb.cid)
-  rm -f /tmp/mongodb.cid
-}
-
-trap kill_mongodb_container SIGINT SIGQUIT SIGTERM INT TERM QUIT
-
 # Map input values from the GitHub Actions workflow to shell variables
 MONGODB_VERSION=$1
 MONGODB_REPLICA_SET=$2

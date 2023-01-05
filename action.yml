@@ -52,6 +52,7 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  post-entrypoint: 'cleanup.sh'
   args:
     - ${{ inputs.mongodb-version }}
     - ${{ inputs.mongodb-replica-set }}
