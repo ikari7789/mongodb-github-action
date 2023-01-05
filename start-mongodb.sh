@@ -15,7 +15,6 @@ MONGODB_PORT=$3
 MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
-RUNNER_NAME=$7
 CID_FILE=/tmp/mongodb.cid
 
 if [ -z "$MONGODB_VERSION" ]; then
@@ -31,10 +30,6 @@ DOCKER_SWITCHES="--publish ${MONGODB_PORT}:${MONGODB_PORT}"
 if [ -z "$MONGODB_REPLICA_SET" ]; then
   DOCKER_SWITCHES="--publish ${MONGODB_PORT}:27017"
 fi
-if [ ! -z "$RUNNER_NAME" ]; then
-  DOCKER_SWITCHES="--link $RUNNER_NAME"
-fi
-
 
 echo "::group::Selecting correct MongoDB client"
 if [ "`echo $MONGODB_VERSION | cut -c 1`" = "4" ]; then
@@ -63,11 +58,14 @@ if [ -z "$MONGODB_REPLICA_SET" ]; then
   fi
   echo "::endgroup::"
 
-  echo "::set-output name=mongodb-cid::$(cat $CID_FILE)"
-  echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+  echo "::set-output name=mongodb-container-id::$(cat $CID_FILE)"
+  echo "mongodb-container-id=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
 
-  echo "::set-output name=mongodb-container::$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)"
-  echo "mongodb-container=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)" >> $GITHUB_OUTPUT
+  echo "::set-output name=mongodb-container-name::$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)"
+  echo "mongodb-container-name=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)" >> $GITHUB_OUTPUT
+
+  echo "::set-output name=mongodb-container-port::$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))"
+  echo "mongodb-container-port=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "27017/tcp") 0).HostPort }}' $(cat $CID_FILE))" >> $GITHUB_OUTPUT
 
   exit 0
 fi
@@ -87,11 +85,14 @@ if [ $? -ne 0 ]; then
 fi
 echo "::endgroup::"
 
-echo "::set-output name=mongodb-cid::$(cat $CID_FILE)"
-echo "mongodb-cid=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
+echo "::set-output name=mongodb-container-id::$(cat $CID_FILE)"
+echo "mongodb-container-id=$(cat $CID_FILE)" >> $GITHUB_OUTPUT
 
-echo "::set-output name=mongodb-container::$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)"
-echo "mongodb-container=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)" >> $GITHUB_OUTPUT
+echo "::set-output name=mongodb-container-name::$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)"
+echo "mongodb-container-name=$(docker inspect --format="{{.Name}}" $(cat $CID_FILE) | cut -c2-)" >> $GITHUB_OUTPUT
+
+echo "::set-output name=mongodb-container-port::$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "'${MONGODB_PORT}'/tcp") 0).HostPort }}' $(cat $CID_FILE))"
+echo "mongodb-container-port=$(docker inspect --format='{{ (index (index .NetworkSettings.Ports "'${MONGODB_PORT}'/tcp") 0).HostPort }}' $(cat $CID_FILE))" >> $GITHUB_OUTPUT
 
 echo "::group::Waiting for MongoDB to accept connections"
 sleep 1
