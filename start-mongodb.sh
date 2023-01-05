@@ -7,7 +7,7 @@ MONGODB_PORT=$3
 MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
-CID_FILE=/tmp/mongodb.cid
+CID_FILE=$GITHUB_WORKSPACE/mongodb.cid
 
 if [ -z "$MONGODB_VERSION" ]; then
   echo ""

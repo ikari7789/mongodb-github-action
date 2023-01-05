@@ -1,5 +1,7 @@
 #!/bin/sh
 
-docker container kill $(cat /tmp/mongodb.cid)
-docker container rm --force $(cat /tmp/mongodb.cid)
-rm -f /tmp/mongodb.cid
+CID_FILE=$GITHUB_WORKSPACE/mongodb.cid
+
+docker container kill $(cat $CID_FILE)
+docker container rm --force $(cat $CID_FILE)
+rm -f $CID_FILE
