@@ -7,7 +7,6 @@ MONGODB_PORT=$3
 MONGODB_DB=$4
 MONGODB_USERNAME=$5
 MONGODB_PASSWORD=$6
-CID_FILE=$GITHUB_WORKSPACE/mongodb-$GITHUB_RUN_ID.cid
 
 ensure_required_values_provided() {
   if [ -z "$MONGODB_VERSION" ]; then
@@ -39,6 +38,14 @@ cleanup_leftover_container() {
   fi
 }
 
+prepare_cid_file() {
+  TEMP_FILE=$(mktemp -t mongodb- $GITHUB_WORKSPACE/mongodb)
+  CID_FILE=$GITHUB_WORKSPACE/$(basename $TEMP_FILE)
+  rm $TEMP_FILE
+  cleanup_leftover_container
+  echo "CID_FILE=${CID_FILE}" >> $GITHUB_ENV
+}
+
 start_container() {
   DOCKER_SWITCHES="--publish $MONGODB_PORT"
   MONGO_SWITCHES="--port $MONGODB_PORT"
@@ -61,7 +68,7 @@ start_container() {
   echo "  - cidfile [$CID_FILE]"
   echo ""
 
-  cleanup_leftover_container
+  prepare_cid_file
 
   docker run --cidfile $CID_FILE $DOCKER_SWITCHES --detach mongo:$MONGODB_VERSION $MONGO_SWITCHES
 
@@ -69,6 +76,13 @@ start_container() {
     echo "Error starting MongoDB Docker container"
     exit 2
   fi
+
+  set_outputs
+
+  exit_if_no_replica_set
+  wait_for_connections
+  initiate_replica_set
+  check_replica_set_status
 
   echo "::endgroup::"
 }
@@ -167,8 +181,3 @@ check_replica_set_status() {
 ensure_required_values_provided
 select_mongodb_client
 start_container
-set_outputs
-exit_if_no_replica_set
-wait_for_connections
-initiate_replica_set
-check_replica_set_status
